@@ -8,7 +8,7 @@ in the course.
 
 import html
 import random
-
+import pkg_resources
 import importlib.resources
 import six
 from web_fragments.fragment import Fragment
@@ -135,7 +135,8 @@ class FeedbackXBlock(XBlock):
     @classmethod
     def resource_string(cls, path):
         """Handy helper for getting resources from our kit."""
-        return importlib.resources.files(__package__).joinpath(path).read_text(encoding="utf-8")
+        resource_content = pkg_resources.resource_string(__name__, path)
+        return resource_content.decode('utf-8')
 
     def get_prompt(self, index=-1):
         """

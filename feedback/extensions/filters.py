@@ -7,19 +7,11 @@ from django.conf import settings
 from django.template import Context, Template
 from openedx_filters import PipelineStep
 from web_fragments.fragment import Fragment
-
-try:
-    from cms.djangoapps.contentstore.utils import get_lms_link_for_item
-    from lms.djangoapps.courseware.block_render import (get_block_by_usage_id,
-                                                        load_single_xblock)
-    from openedx.core.djangoapps.enrollments.data import get_user_enrollments
-    from xmodule.modulestore.django import modulestore
-except ImportError:
-    load_single_xblock = None
-    get_block_by_usage_id = None
-    modulestore = None
-    get_user_enrollments = None
-    get_lms_link_for_item = None
+import pkg_resources
+from xmodule.modulestore.django import modulestore
+from openedx.core.djangoapps.enrollments.data import get_user_enrollments
+from cms.djangoapps.contentstore.utils import get_lms_link_for_item
+from lms.djangoapps.courseware.module_render import get_module_by_usage_id, load_single_xblock
 
 TEMPLATE_ABSOLUTE_PATH = "/instructor_dashboard/"
 BLOCK_CATEGORY = "feedback"
@@ -75,7 +67,8 @@ class AddFeedbackTab(PipelineStep):
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
-        return importlib.resources.files("feedback").joinpath(path).read_text(encoding="utf-8")
+        resource_content = pkg_resources.resource_string("feedback", path)
+        return resource_content.decode('utf-8')
 
 
 def load_blocks(request, course):
@@ -99,7 +92,7 @@ def load_blocks(request, course):
 
     students = get_user_enrollments(course_id).values_list("user_id", "user__username")
     for feedback_block in feedback_blocks:
-        block, _ = get_block_by_usage_id(
+        block, _ = get_module_by_usage_id(
             request,
             str(course.id),
             str(feedback_block.location),
