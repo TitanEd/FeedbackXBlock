@@ -35,7 +35,6 @@ class Feedback(TimeStampedModel):
     )
     block_id = models.CharField(
         max_length=1024,
-        db_index=True,
     )
     rating = models.IntegerField(verbose_name="Rating", default=0)
     block_name = models.CharField(max_length=1024, null=True, blank=True)
