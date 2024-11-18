@@ -9,6 +9,7 @@ from django.test.utils import override_settings
 
 from feedback.extensions.filters import AddFeedbackTab, load_xblock_answers
 
+
 class TestFilters(TestCase):
     """
     Test suite for the FeedbackXBlock filters.
@@ -23,7 +24,9 @@ class TestFilters(TestCase):
     @patch("feedback.extensions.filters.get_user_enrollments")
     @patch("feedback.extensions.filters.get_block_by_usage_id")
     @patch("feedback.extensions.filters.modulestore")
-    def test_run_filter_without_blocks(self, modulestore_mock, get_block_by_usage_id_mock, get_user_enrollments_mock):
+    def test_run_filter_without_blocks(
+        self, modulestore_mock, get_block_by_usage_id_mock, get_user_enrollments_mock
+    ):
         """
         Check the filter is not executed when there are no Feedback blocks in the course.
 
@@ -39,14 +42,19 @@ class TestFilters(TestCase):
         get_block_by_usage_id_mock.assert_not_called()
         get_user_enrollments_mock.assert_not_called()
 
-
     @patch("feedback.extensions.filters.get_lms_link_for_item")
     @patch("feedback.extensions.filters.get_user_enrollments")
     @patch("feedback.extensions.filters.get_block_by_usage_id")
     @patch("feedback.extensions.filters.load_single_xblock")
     @patch("feedback.extensions.filters.modulestore")
-    def test_run_filter(self, modulestore_mock, load_single_xblock_mock, get_block_by_usage_id_mock, get_user_enrollments_mock,
-                        get_lms_link_for_item_mock):
+    def test_run_filter(
+        self,
+        modulestore_mock,
+        load_single_xblock_mock,
+        get_block_by_usage_id_mock,
+        get_user_enrollments_mock,
+        get_lms_link_for_item_mock,
+    ):
         """
         Check the filter is executed when there are Feedback blocks in the course.
 
@@ -74,9 +82,7 @@ class TestFilters(TestCase):
         get_user_enrollments_mock.assert_called_once()
         self.assertEqual(1, len(result.get("context", {})["sections"]))
 
-    @override_settings(
-        FEATURES={"ENABLE_FEEDBACK_INSTRUCTOR_VIEW":False}
-    )
+    @override_settings(FEATURES={"ENABLE_FEEDBACK_INSTRUCTOR_VIEW": False})
     def test_run_filter_disable(self):
         context = {"course": Mock(id="test-course-id"), "sections": []}
         template_name = "test-template-name"
@@ -101,7 +107,9 @@ class TestFilters(TestCase):
 
         load_single_xblock_mock.return_value = single_block
 
-        answers = load_xblock_answers(request_mock, students, course_id, block_id, course)
+        answers = load_xblock_answers(
+            request_mock, students, course_id, block_id, course
+        )
 
         self.assertEqual(
             [
@@ -113,7 +121,6 @@ class TestFilters(TestCase):
             ],
             answers,
         )
-
 
     @patch("feedback.extensions.filters.load_single_xblock")
     def test_load_xblock_answers_skip_empty(self, load_single_xblock_mock):
@@ -131,7 +138,9 @@ class TestFilters(TestCase):
 
         load_single_xblock_mock.return_value = single_block
 
-        answers = load_xblock_answers(request_mock, students, course_id, block_id, course)
+        answers = load_xblock_answers(
+            request_mock, students, course_id, block_id, course
+        )
 
         self.assertEqual(
             [],

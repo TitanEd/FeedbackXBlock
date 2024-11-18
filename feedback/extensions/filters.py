@@ -1,6 +1,7 @@
 """
 Open edX Filters needed for instructor dashboard integration.
 """
+
 import importlib.resources
 from crum import get_current_request
 from django.conf import settings
@@ -11,7 +12,10 @@ import pkg_resources
 from xmodule.modulestore.django import modulestore
 from openedx.core.djangoapps.enrollments.data import get_user_enrollments
 from cms.djangoapps.contentstore.utils import get_lms_link_for_item
-from lms.djangoapps.courseware.module_render import get_module_by_usage_id, load_single_xblock
+from lms.djangoapps.courseware.module_render import (
+    get_module_by_usage_id,
+    load_single_xblock,
+)
 
 TEMPLATE_ABSOLUTE_PATH = "/instructor_dashboard/"
 BLOCK_CATEGORY = "feedback"
@@ -68,7 +72,7 @@ class AddFeedbackTab(PipelineStep):
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
         resource_content = pkg_resources.resource_string("feedback", path)
-        return resource_content.decode('utf-8')
+        return resource_content.decode("utf-8")
 
 
 def load_blocks(request, course):
