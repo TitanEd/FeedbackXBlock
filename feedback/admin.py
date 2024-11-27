@@ -7,7 +7,15 @@ from .models import *
 
 class FeedbackAdmin(admin.ModelAdmin):
     raw_id_fields = ["user"]
-    list_display = ["course_key","get_course_name", "user", "block_name", "rating", "feedback"]
+    list_display = [
+        "course_key",
+        "get_course_name",
+        "user",
+        "get_user_mobile",
+        "block_name",
+        "rating",
+        "feedback",
+    ]
     search_fields = [
         "course_key",
         "user__username",
@@ -15,14 +23,22 @@ class FeedbackAdmin(admin.ModelAdmin):
     list_filter = ["course_key"]
     actions = ("export_as_csv",)
 
-
     def get_course_name(self, instance):
         try:
             course_overview = CourseOverview.get_from_id(instance.course_key)
             return course_overview.display_name
         except Exception as e:
             return ""
+
     get_course_name.short_description = "Course Name"
+
+    def get_user_mobile(self, instance):
+        try:
+            return instance.user.profile.mobile_number
+        except Exception as e:
+            return ""
+
+    get_user_mobile.short_description = "Mobile Number"
 
     def export_as_csv(self, request, queryset):
         field_names = [
@@ -30,6 +46,7 @@ class FeedbackAdmin(admin.ModelAdmin):
             "Course Name",
             "User",
             "Email",
+            "Mobile Number",
             "Feedback Block",
             "Rating",
             "Feedback",
@@ -45,8 +62,10 @@ class FeedbackAdmin(admin.ModelAdmin):
                     or obj.user.get_full_name()
                     or obj.user.username
                 )
+                mobile_number = obj.user.profile.mobile_number
             except Exception as e:
                 fullname = obj.user.username
+                mobile_number = ""
 
             try:
                 course_overview = CourseOverview.get_from_id(obj.course_key)
@@ -59,6 +78,7 @@ class FeedbackAdmin(admin.ModelAdmin):
                 course_name,
                 fullname,
                 obj.user.email,
+                mobile_number,
                 obj.block_name,
                 obj.rating,
                 obj.feedback,

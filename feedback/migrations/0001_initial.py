@@ -18,20 +18,62 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Feedback',
+            name="Feedback",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created', model_utils.fields.AutoCreatedField(default=django.utils.timezone.now, editable=False, verbose_name='created')),
-                ('modified', model_utils.fields.AutoLastModifiedField(default=django.utils.timezone.now, editable=False, verbose_name='modified')),
-                ('course_key', opaque_keys.edx.django.models.CourseKeyField(db_index=True, max_length=255)),
-                ('block_id', models.CharField(max_length=1024)),
-                ('rating', models.IntegerField(default=0, verbose_name='Rating')),
-                ('block_name', models.CharField(blank=True, max_length=1024, null=True)),
-                ('feedback', models.TextField(blank=True, null=True, verbose_name='User Feedback')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='feedback_submitted_by', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created",
+                    model_utils.fields.AutoCreatedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="created",
+                    ),
+                ),
+                (
+                    "modified",
+                    model_utils.fields.AutoLastModifiedField(
+                        default=django.utils.timezone.now,
+                        editable=False,
+                        verbose_name="modified",
+                    ),
+                ),
+                (
+                    "course_key",
+                    opaque_keys.edx.django.models.CourseKeyField(
+                        db_index=True, max_length=255
+                    ),
+                ),
+                ("block_id", models.CharField(max_length=1024)),
+                ("rating", models.IntegerField(default=0, verbose_name="Rating")),
+                (
+                    "block_name",
+                    models.CharField(blank=True, max_length=1024, null=True),
+                ),
+                (
+                    "feedback",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="User Feedback"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="feedback_submitted_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]
