@@ -39,6 +39,11 @@ class Feedback(TimeStampedModel):
     rating = models.IntegerField(verbose_name="Rating", default=0)
     block_name = models.CharField(max_length=1024, null=True, blank=True)
     feedback = models.TextField(verbose_name="User Feedback", null=True, blank=True)
+    consent_to_share = models.BooleanField(
+        verbose_name="Consent to Share Feedback",
+        help_text="Check this box to consent to your feedback being shared publicly by the EBC Learning on its website, social media, and promotional materials.",
+        default=False,
+    )
 
     def __str__(self):
         return "{}-{}".format(str(self.course_key), self.user.username)
@@ -48,7 +53,14 @@ class Feedback(TimeStampedModel):
 
     @classmethod
     def create_or_update(
-        cls, course_key, user_id, block_id, block_name, rating, feedback_message
+        cls,
+        course_key,
+        user_id,
+        block_id,
+        block_name,
+        rating,
+        feedback_message,
+        consent_to_share,
     ):
         """
         Update user feedback record
@@ -62,6 +74,7 @@ class Feedback(TimeStampedModel):
             if feedback_message is not None:
                 feedback.feedback = feedback_message
             feedback.block_name = block_name
+            feedback.consent_to_share = consent_to_share
             feedback.save()
         except Exception as e:
             log.info(

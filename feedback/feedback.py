@@ -139,6 +139,13 @@ class FeedbackXBlock(XBlock):
         default=False,
         scope=Scope.settings,
     )
+    consent_to_share = String(
+        default="false",
+        scope=Scope.user_state,
+        help=_(
+            "Check this box to consent to your feedback being shared publicly by the EBC Learning on its website, social media, and promotional materials."
+        ),
+    )
 
     @classmethod
     def resource_string(cls, path):
@@ -207,7 +214,7 @@ class FeedbackXBlock(XBlock):
 
         # We have five Likert fields right now, but we'd like this to
         # be dynamic
-        indexes = range(5)
+        indexes = range(4, -1, -1)
 
         # If the user voted before, we'd like to show that
         active_vote = ["checked" if i == self.user_vote else "" for i in indexes]
@@ -294,6 +301,7 @@ class FeedbackXBlock(XBlock):
                     context={
                         "self": self,
                         "scale": scale,
+                        "consent_to_share": self.consent_to_share,
                         "freeform_prompt": prompt["freeform"],
                         "likert_prompt": prompt["likert"],
                         "response": response,
@@ -386,10 +394,10 @@ class FeedbackXBlock(XBlock):
 
         # Remove old vote if we voted before
         if self.user_vote != -1:
-            self.vote_aggregate[self.user_vote] -= 1
+            self.vote_aggregate[-(self.user_vote + 1)] -= 1
 
         self.user_vote = data["vote"]
-        self.vote_aggregate[self.user_vote] += 1
+        self.vote_aggregate[-(self.user_vote + 1)] = 1
 
     @XBlock.json_handler
     def feedback(self, data, suffix=""):  # pylint: disable=unused-argument
@@ -424,6 +432,9 @@ class FeedbackXBlock(XBlock):
             )
             self.user_freeform = data["freeform"]
 
+        if "consent_to_share" in data:
+            self.consent_to_share = "true" if data.get("consent_to_share") else "false"
+
         response.update(
             {  # pylint: disable=possibly-used-before-assignment
                 "freeform": self.user_freeform,
@@ -442,6 +453,7 @@ class FeedbackXBlock(XBlock):
                 self.display_name,
                 data.get("vote"),
                 data.get("freeform"),
+                data.get("consent_to_share", False),
             )
 
         return response

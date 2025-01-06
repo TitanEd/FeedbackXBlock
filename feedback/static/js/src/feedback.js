@@ -31,7 +31,7 @@ function FeedbackXBlock(runtime, element) {
 	if(vote != -1) {
 	    feedback['vote'] = vote;
 	}
-
+	feedback['consent_to_share'] = $("#consent_to_share", element).is(":checked")
 	Logger.log("edx.feedbackxblock.submitted", feedback);
 	$.ajax({
             type: "POST",

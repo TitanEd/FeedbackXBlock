@@ -15,12 +15,15 @@ class FeedbackAdmin(admin.ModelAdmin):
         "block_name",
         "rating",
         "feedback",
+        "consent_to_share",
+        "created",
+        "modified",
     ]
     search_fields = [
         "course_key",
         "user__username",
     ]
-    list_filter = ["course_key"]
+    list_filter = ["consent_to_share", "course_key"]
     actions = ("export_as_csv",)
 
     def get_course_name(self, instance):
@@ -50,6 +53,9 @@ class FeedbackAdmin(admin.ModelAdmin):
             "Feedback Block",
             "Rating",
             "Feedback",
+            "Created",
+            "Modified",
+            "Consent to Share",
         ]
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = "attachment; filename=Feedbacks.csv"
@@ -82,6 +88,9 @@ class FeedbackAdmin(admin.ModelAdmin):
                 obj.block_name,
                 obj.rating,
                 obj.feedback,
+                obj.created.strftime("%d-%m-%Y %H:%M"),
+                obj.modified.strftime("%d-%m-%Y %H:%M"),
+                "Yes" if obj.consent_to_share else "No",
             ]
             row = writer.writerow(data)
         return response

@@ -9,10 +9,14 @@
     border-color: rgba(0,0,0,0.1);
     padding: 10px
 }
-
+.feedback_block #consent_to_share{
+    margin: 0;
+    margin-right: 5px;
+}
 /* Little thank you message div after people vote */
 .feedback_thank_you {
     color: green;
+    margin-top: 1rem;
 }
 
 /* Label for the freeform text input. We want a little
@@ -77,8 +81,9 @@
 .feedback_block .feedback_freeform_area {
     height:inherit;
     width: 100%;
+    margin-bottom: 1rem;
 }
-
+.feedback_block .feedback_freeform_area 
 .feedback_block .feedback_rating_active {
     color: blue;
     font-weight: bold;
@@ -119,4 +124,67 @@
 .feedback_likert_scale {
     display: flex;
     flex-direction: row;
+}
+.feedback_block .consent_to_share{
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.feedback_block .consent_to_share input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.feedback_block .consent_to_share .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+    border: 1px solid #b0b0b0;
+}
+
+/* On mouse-over, add a grey background color */
+.feedback_block .consent_to_share:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.feedback_block .consent_to_share input:checked ~ .checkmark {
+  background-color: #ff001b;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.feedback_block .consent_to_share .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.feedback_block .consent_to_share input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.feedback_block .consent_to_share .checkmark:after {
+    left: 7px;
+    top: 2px;
+    width: 5px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
