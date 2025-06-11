@@ -51,6 +51,9 @@ class Feedback(TimeStampedModel):
     def __repr__(self):
         return self.__str__()
 
+    class Meta:
+        app_label = 'feedback'
+
     @classmethod
     def create_or_update(
         cls,
