@@ -34,19 +34,14 @@ resource_loader = ResourceLoader(__name__)
 # We provide default text which is designed to elicit student thought. We'd
 # like instructors to customize this to something highly structured (not
 # "What did you think?" and "How did you like it?".
-DEFAULT_FREEFORM = _("What did you learn from this? What was missing?")
-DEFAULT_LIKERT = _("How would you rate this as a learning experience?")
+DEFAULT_FREEFORM = _("What did you like about the materials? What was missing?")
+DEFAULT_LIKERT = _("How was your overall experience so far?")
 DEFAULT_DEFAULT = _(
     "Think about the material, and try to synthesize key "
     "lessons learned, as well as key gaps in our presentation."
 )
-DEFAULT_PLACEHOLDER = _(
-    "Take a little bit of time to reflect here. "
-    "Research shows that a meaningful synthesis will help "
-    "you better understand and remember material from "
-    "this course."
-)
-DEFAULT_ICON = "star"
+DEFAULT_PLACEHOLDER = ""
+DEFAULT_ICON = "face"
 DEFAULT_SCALETEXT = [_("Excellent"), _("Good"), _("Average"), _("Fair"), _("Poor")]
 
 # Unicode alt faces are cute, but we do nulls instead for a11y.
@@ -119,7 +114,7 @@ class FeedbackXBlock(XBlock):
     display_name = String(
         display_name=_("Display Name"),
         default=_("Provide Feedback"),
-        scopde=Scope.settings,
+        scope=Scope.settings,
     )
 
     voting_message = String(
@@ -286,6 +281,24 @@ class FeedbackXBlock(XBlock):
         else:
             response = ""
 
+        # Get the current user's name using user_id
+        from django.contrib.auth.models import User  # Import the User model
+        user_name = "User"  # Default fallback
+        if hasattr(self, "xmodule_runtime") and hasattr(self.xmodule_runtime, "user_id"):
+            try:
+                user = User.objects.get(id=self.xmodule_runtime.user_id)
+                # Prioritize first_name (likely "Yagnesh")
+                if user.first_name:
+                    user_name = user.first_name
+                # Fall back to full name if first_name is empty
+                elif user.get_full_name():
+                    user_name = user.get_full_name()
+                # Fall back to username if neither first_name nor full_name is available
+                else:
+                    user_name = user.username
+            except User.DoesNotExist:
+                user_name = "User"
+
         # We initialize self.p_user if not initialized -- this sets whether
         # or not we show it. From there, if it is less than odds of showing,
         # we set the fragment to the rendered XBlock. Otherwise, we return
@@ -306,6 +319,7 @@ class FeedbackXBlock(XBlock):
                         "likert_prompt": prompt["likert"],
                         "response": response,
                         "placeholder": prompt["placeholder"],
+                        "user_name": user_name,  # Pass the updated user_name to the template
                     },
                     i18n_service=self.runtime.service(self, "i18n"),
                 )
@@ -387,7 +401,7 @@ class FeedbackXBlock(XBlock):
         """
         # prompt_choice is initialized by student view.
         # Ideally, we'd break this out into a function.
-        prompt = self.get_prompt(self.prompt_choice)  # pylint: disable=unused-variable]
+        prompt = self.get_prompt(self.prompt_choice)  # pylint: disable=unused-variable
 
         # Make sure we're initialized
         self.init_vote_aggregate()
