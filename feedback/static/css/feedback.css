@@ -13,27 +13,33 @@
 
 /* Greeting message */
 .feedback_greeting {
-    font-size: 1.6rem; /* Larger for prominence */
-    font-weight: bold;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 14px; /* Larger for prominence */
     margin-bottom: 1.5rem;
-    color: #333;
+    font-weight: 600;
+    line-height: 100%;
+    color: #000000;
 }
 
 /* Likert scale header */
 .feedback_block .feedback_likert_field legend.feedback_likert_header {
+    font-family: 'Open Sans', sans-serif !important;
     border-bottom: none !important;
-    font-weight: bold;
-    font-size: 1.6rem; /* Larger for consistency */
+    font-size: 14px; /* Larger for consistency */
+    font-weight: 600;
+    line-height: 100%;
     margin-bottom: 1rem;
+    color: #000000;
 }
 
 /* Likert scale container */
 .feedback_block .feedback_likert_scale {
     display: flex;
     flex-direction: row;
-    gap: 15px; /* Spacing between items */
+    gap: 4px; /* Spacing between items */
     font-size: 1.2rem; /* Larger text */
     margin-bottom: 1.5rem; /* Spacing below */
+    justify-content: flex-start;
 }
 
 /* Likert radio buttons */
@@ -46,9 +52,8 @@
 .feedback_block .feedback_likert_rating {
     cursor: pointer;
     border-radius: 5px;
-    display: inline-block;
+    display: block;
     text-align: center;
-    padding: 5px 15px; /* Slightly more padding */
 }
 
 .feedback_icon_active {
@@ -72,8 +77,15 @@
     border-width: 1px;
     border-color: transparent;
     padding: 1px;
-    height: 70px; /* Larger icons for Likert scale */
-    width: 70px;
+}
+.feedback_icon img {
+    height: 30px;
+    background: none;
+    outline: none;
+    filter: drop-shadow(0 0 0 transparent);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    width: 30px;
 }
 
 .feedback_block input[type="radio"]:focus ~ .feedback_icon,
@@ -93,10 +105,12 @@
 }
 
 .feedback_block .feedback_header {
-    font-size: 1.4rem; /* Larger for emphasis */
-    font-weight: bold;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 12px; /* Larger for emphasis */
     color: #333;
     display: block;
+    font-weight: 400;
+    line-height: 100%;
 }
 
 /* Freeform textarea */
@@ -124,14 +138,17 @@
 
 /* Consent to share */
 .feedback_block .consent_to_share {
+    font-family: 'Open Sans', sans-serif !important;
     display: block;
     position: relative;
-    padding-left: 40px; /* Space for larger checkmark */
+    padding-left: 29px; /* Space for larger checkmark */
     cursor: pointer;
-    font-size: 1.3rem; /* Larger consent message */
+    font-size: 10px; /* Larger consent message */
     line-height: 1.5;
     margin: 1.5rem 0;
     color: #333; /* Consistent with other text */
+    font-weight: 400;
+    line-height: 100%;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -152,10 +169,10 @@
 
 .feedback_block .consent_to_share .checkmark {
     position: absolute;
-    top: 2px; /* Center vertically */
+    top: -1px; /* Center vertically */
     left: 0;
-    height: 30px; /* Larger checkmark */
-    width: 30px;
+    height: 20px; /* Larger checkmark */
+    width: 20px;
     background-color: #ffffff; /* White when unchecked */
     border: 2px solid #b12c21; /* Thicker, theme-colored border */
     border-radius: 4px; /* Rounded for clean UI */
@@ -182,12 +199,12 @@
 }
 
 .feedback_block .consent_to_share .checkmark:after {
-    left: 11px; /* Adjusted for larger size */
-    top: 5px;
-    width: 8px; /* Larger checkmark */
-    height: 18px;
+    top: 2px;
+    left: 5px;
+    width: 6px; /* Larger checkmark */
+    height: 12px;
     border: solid white;
-    border-width: 0 3px 3px 0;
+    border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
 
@@ -203,11 +220,11 @@
 .feedback_block .feedback_submit_feedback {
     background-color: #b12c21;
     color: white;
-    padding: 12px 24px; /* Larger padding */
+    padding: 8px 16px; /* Larger padding */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1.1rem; /* Slightly larger text */
+    font-size: 17px; /* Slightly larger text */
     transition: none; /* Prevent any transitions */
 }
 
