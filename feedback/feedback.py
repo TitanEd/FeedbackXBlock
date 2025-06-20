@@ -287,15 +287,7 @@ class FeedbackXBlock(XBlock):
         if hasattr(self, "xmodule_runtime") and hasattr(self.xmodule_runtime, "user_id"):
             try:
                 user = User.objects.get(id=self.xmodule_runtime.user_id)
-                # Prioritize first_name (likely "Yagnesh")
-                if user.first_name:
-                    user_name = user.first_name
-                # Fall back to full name if first_name is empty
-                elif user.get_full_name():
-                    user_name = user.get_full_name()
-                # Fall back to username if neither first_name nor full_name is available
-                else:
-                    user_name = user.username
+                user_name = user.profile.name or user.get_full_name() or user.username
             except User.DoesNotExist:
                 user_name = "User"
 
