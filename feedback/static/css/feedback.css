@@ -192,10 +192,17 @@
     content: "";
     position: absolute;
     display: none;
+    top: 1px; /* Adjusted for centering */
+    left: 6px; /* Centered for thicker tick */
+    width: 7px; /* Wider for prominence */
+    height: 14px; /* Taller for bolder look */
+    border: solid white;
+    border-width: 0 3px 3px 0; /* Thicker border for stronger tick */
+    transform: rotate(45deg);
 }
 
 .feedback_block .consent_to_share input:checked ~ .checkmark:after {
-    display: block;
+    display: block; /* Show checkmark when checked */
 }
 
 .feedback_block .consent_to_share .checkmark:after {

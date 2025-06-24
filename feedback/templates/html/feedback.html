@@ -19,7 +19,7 @@
       <textarea name="feedback_freeform_textarea" class="feedback_freeform_area" rows="4" cols="45" placeholder="{% trans placeholder %}">{% trans self.user_freeform %}</textarea>
 
       <label for="consent_to_share" class="consent_to_share">{% trans "I consent to my feedback being shared publicly by EBC Learning on its website, social media, and promotional materials." %}
-        <input type="checkbox" id="consent_to_share" name="consent_to_share" {% if consent_to_share == "true" %}checked{% endif %}>
+        <input type="checkbox" id="consent_to_share" name="consent_to_share" {% if consent_to_share %}checked{% endif %}>
         <span class="checkmark"></span>
       </label> 
       <div class="feedback_thank_you" aria-live=polite>{{response}}</div>

@@ -17,15 +17,12 @@ from model_utils.models import TimeStampedModel
 from django.contrib.auth.models import User
 from opaque_keys.edx.django.models import CourseKeyField
 
-
 log = logging.getLogger(__name__)
-
 
 class Feedback(TimeStampedModel):
     """
     Model for storing course wise feedback
     """
-
     course_key = CourseKeyField(db_index=True, max_length=255)
     user = models.ForeignKey(
         User,
@@ -42,6 +39,11 @@ class Feedback(TimeStampedModel):
     consent_to_share = models.BooleanField(
         verbose_name="Consent to Share Feedback",
         help_text="Check this box to consent to your feedback being shared publicly by the EBC Learning on its website, social media, and promotional materials.",
+        default=True,
+    )
+    is_approved = models.BooleanField(
+        verbose_name="Approved for Display",
+        help_text="Check this box to approve this feedback for public display on the course page.",
         default=False,
     )
 
