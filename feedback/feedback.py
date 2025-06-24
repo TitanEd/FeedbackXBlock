@@ -283,8 +283,11 @@ class FeedbackXBlock(XBlock):
 
         # Get the current user's name using user_id
         from django.contrib.auth.models import User  # Import the User model
+
         user_name = "User"  # Default fallback
-        if hasattr(self, "xmodule_runtime") and hasattr(self.xmodule_runtime, "user_id"):
+        if hasattr(self, "xmodule_runtime") and hasattr(
+            self.xmodule_runtime, "user_id"
+        ):
             try:
                 user = User.objects.get(id=self.xmodule_runtime.user_id)
                 user_name = user.profile.name or user.get_full_name() or user.username

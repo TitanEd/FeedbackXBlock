@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
 from .models import Feedback
 
+
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
     raw_id_fields = ["user"]
@@ -29,17 +30,40 @@ class FeedbackAdmin(admin.ModelAdmin):
     list_filter = ["consent_to_share", "is_approved", "course_key"]
     list_editable = ["is_approved"]
     actions = ["export_as_csv", "toggle_approval"]
-    readonly_fields = ["course_key", "user", "block_name", "rating", "feedback", "created", "modified", "rating_display"]
+    readonly_fields = [
+        "course_key",
+        "user",
+        "block_name",
+        "rating",
+        "feedback",
+        "created",
+        "modified",
+        "rating_display",
+    ]
     fieldsets = (
-        (None, {
-            'fields': ('course_key', 'user', 'block_name', 'rating', 'rating_display', 'feedback', 'consent_to_share', 'is_approved', 'created', 'modified'),
-            'description': (
-                '<p><strong>Note:</strong> To toggle approval status, use the "is_approved" checkbox in the list view '
-                'or the "Toggle approval status" bulk action. Editing individual feedback here is only necessary for '
-                'specific updates to consent or approval. Ratings are displayed on a 1–5 scale (1=Poor, 5=Excellent) in '
-                'the list view and CSV export, while the raw rating (0–4) is shown below for reference.</p>'
-            ),
-        }),
+        (
+            None,
+            {
+                "fields": (
+                    "course_key",
+                    "user",
+                    "block_name",
+                    "rating",
+                    "rating_display",
+                    "feedback",
+                    "consent_to_share",
+                    "is_approved",
+                    "created",
+                    "modified",
+                ),
+                "description": (
+                    '<p><strong>Note:</strong> To toggle approval status, use the "is_approved" checkbox in the list view '
+                    'or the "Toggle approval status" bulk action. Editing individual feedback here is only necessary for '
+                    "specific updates to consent or approval. Ratings are displayed on a 1–5 scale (1=Poor, 5=Excellent) in "
+                    "the list view and CSV export, while the raw rating (0–4) is shown below for reference.</p>"
+                ),
+            },
+        ),
     )
 
     def get_course_name(self, instance):
@@ -48,6 +72,7 @@ class FeedbackAdmin(admin.ModelAdmin):
             return course_overview.display_name
         except Exception as e:
             return ""
+
     get_course_name.short_description = "Course Name"
 
     def get_user_mobile(self, instance):
@@ -55,6 +80,7 @@ class FeedbackAdmin(admin.ModelAdmin):
             return instance.user.profile.mobile_number
         except Exception as e:
             return ""
+
     get_user_mobile.short_description = "Mobile Number"
 
     def get_rating_display(self, instance):
@@ -71,6 +97,7 @@ class FeedbackAdmin(admin.ModelAdmin):
             }
             return rating_map.get(instance.rating, str(instance.rating + 1))
         return "-"
+
     get_rating_display.short_description = "Rating"
 
     def rating_display(self, instance):
@@ -78,6 +105,7 @@ class FeedbackAdmin(admin.ModelAdmin):
         Read-only field for change form to show 1–5 rating.
         """
         return self.get_rating_display(instance)
+
     rating_display.short_description = "Rating (1–5 Scale)"
 
     def toggle_approval(self, request, queryset):
@@ -89,7 +117,10 @@ class FeedbackAdmin(admin.ModelAdmin):
             feedback.is_approved = not feedback.is_approved
             feedback.save()
             count += 1
-        self.message_user(request, f"Toggled approval status for {count} feedback entries.")
+        self.message_user(
+            request, f"Toggled approval status for {count} feedback entries."
+        )
+
     toggle_approval.short_description = "Toggle approval status for selected feedback"
 
     def export_as_csv(self, request, queryset):

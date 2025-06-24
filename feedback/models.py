@@ -19,10 +19,12 @@ from opaque_keys.edx.django.models import CourseKeyField
 
 log = logging.getLogger(__name__)
 
+
 class Feedback(TimeStampedModel):
     """
     Model for storing course wise feedback
     """
+
     course_key = CourseKeyField(db_index=True, max_length=255)
     user = models.ForeignKey(
         User,
@@ -54,7 +56,7 @@ class Feedback(TimeStampedModel):
         return self.__str__()
 
     class Meta:
-        app_label = 'feedback'
+        app_label = "feedback"
 
     @classmethod
     def create_or_update(
