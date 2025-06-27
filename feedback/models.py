@@ -22,7 +22,10 @@ log = logging.getLogger(__name__)
 
 class Feedback(TimeStampedModel):
     """
-    Model for storing course wise feedback
+    Model for storing course-wise feedback submitted by users.
+
+    This model captures user feedback and ratings for specific course blocks, with options
+    for sharing consent and approval for public display.
     """
 
     course_key = CourseKeyField(db_index=True, max_length=255)
@@ -57,6 +60,11 @@ class Feedback(TimeStampedModel):
 
     class Meta:
         app_label = "feedback"
+        verbose_name = "Feedback"
+        verbose_name_plural = "Course Feedback"
+        indexes = [
+            models.Index(fields=["course_key", "is_approved", "consent_to_share"]),
+        ]
 
     @classmethod
     def create_or_update(
@@ -89,3 +97,39 @@ class Feedback(TimeStampedModel):
                     course_key=course_key, user_id=user_id, error=str(e)
                 )
             )
+
+
+class ShareFeedbackWith(TimeStampedModel):
+    """
+    Model to associate feedback with multiple course versions.
+
+    This model enables feedback submitted for one course version (e.g., V1) to be shared
+    with other course versions (e.g., V2, V3) for display purposes.
+    """
+
+    feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE)
+    course_key = CourseKeyField(
+        db_index=True,
+        max_length=255,
+        help_text="The course key of the course version with which the feedback is shared.",
+    )
+
+    def __str__(self):
+        return "{}-{}".format(str(self.course_key), self.feedback.user.username)
+
+    def __repr__(self):
+        return self.__str__()
+
+    class Meta:
+        app_label = "feedback"
+        verbose_name = "Shared Feedback Course"
+        verbose_name_plural = "Shared Feedback Courses"
+        db_table = "feedback_shared_courses"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["feedback", "course_key"], name="unique_feedback_course_key"
+            )
+        ]
+        indexes = [
+            models.Index(fields=["course_key"]),
+        ]

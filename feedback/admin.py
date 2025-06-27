@@ -4,12 +4,28 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
-from .models import Feedback
+from .models import Feedback, ShareFeedbackWith
+
+
+class ShareFeedbackWithInline(admin.TabularInline):
+    """
+    Inline admin interface for managing courses with which feedback is shared.
+    """
+
+    model = ShareFeedbackWith
+    extra = 1  # Number of empty forms to display
+    verbose_name = "Share Feedback with other Courses"
+    verbose_name_plural = "Share Feedback with other Courses"
 
 
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
+    """
+    Admin interface for managing Feedback entries.
+    """
+
     raw_id_fields = ["user"]
+    inlines = [ShareFeedbackWithInline]
     list_display = [
         "course_key",
         "get_course_name",
@@ -35,7 +51,6 @@ class FeedbackAdmin(admin.ModelAdmin):
         "user",
         "block_name",
         "rating",
-        "feedback",
         "created",
         "modified",
         "rating_display",
@@ -53,8 +68,6 @@ class FeedbackAdmin(admin.ModelAdmin):
                     "feedback",
                     "consent_to_share",
                     "is_approved",
-                    "created",
-                    "modified",
                 ),
                 "description": (
                     '<p><strong>Note:</strong> To toggle approval status, use the "is_approved" checkbox in the list view '
