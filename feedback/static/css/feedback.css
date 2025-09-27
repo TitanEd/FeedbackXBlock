@@ -97,7 +97,9 @@
     cursor: pointer;
     font-size: 14px; /* Slightly larger */
 }
-
+.feedback_block .feedback_likert_label .feedback_scale_text{
+    font-size: 1.2rem;
+}
 /* Freeform header */
 .feedback_block .feedback_header_div {
     margin-top: 0;
