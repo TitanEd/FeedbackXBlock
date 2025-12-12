@@ -1,7 +1,6 @@
-'''
+"""
 Tests for the FeedbackXBlock that needs to run in Open edX.
-'''
-
+"""
 
 import mock
 
@@ -11,6 +10,7 @@ class PatchRandomMixin(object):
     This is a class which will patch random.uniform so that we can
     confirm whether randomization works.
     """
+
     def setUp(self):
         super(PatchRandomMixin, self).setUp()
         self.random_patch_value = None
@@ -18,8 +18,7 @@ class PatchRandomMixin(object):
         def patched_uniform(min, max):
             return self.random_patch_value
 
-        patcher = mock.patch("feedback.feedback.random.uniform",
-                             patched_uniform)
+        patcher = mock.patch("feedback.feedback.random.uniform", patched_uniform)
         patcher.start()
         self.addCleanup(patcher.stop)
 
@@ -49,22 +48,22 @@ class FeedbackTestCase(PatchRandomMixin):
             "urlname": "feedback_block_test_case_0",
             "xblocks": [  # Stopgap until we handle OLX
                 {
-                    'blocktype': 'feedback',
-                    'urlname': 'feedback_0',
-                    'parameters': {'p': 100}
+                    "blocktype": "feedback",
+                    "urlname": "feedback_0",
+                    "parameters": {"p": 100},
                 }
-            ]
+            ],
         },
         {
             "urlname": "feedback_block_test_case_1",
-            'xblocks': [
+            "xblocks": [
                 {
-                    'blocktype': 'feedback',
-                    'urlname': 'feedback_1',
-                    'parameters': {'p': 50}
+                    "blocktype": "feedback",
+                    "urlname": "feedback_1",
+                    "parameters": {"p": 50},
                 }
-            ]
-        }
+            ],
+        },
     ]
 
     def submit_feedback(self, block, data, desired_state):
@@ -72,7 +71,7 @@ class FeedbackTestCase(PatchRandomMixin):
         Make an AJAX call to the XBlock, and assert the state is as
         desired.
         """
-        resp = self.ajax('feedback', block, data)
+        resp = self.ajax("feedback", block, data)
         self.assertEqual(resp.status_code, 200)
         # pylint: disable=no-member
         self.assertEqual(resp.data, desired_state)
@@ -87,9 +86,9 @@ class FeedbackTestCase(PatchRandomMixin):
         response = self.render_block(block_urlname)
         self.assertEqual(response.status_code, 200)
         if rendered:
-            self.assertTrue('feedback_likert_scale' in response.content)
+            self.assertTrue("feedback_likert_scale" in response.content)
         else:
-            self.assertFalse('feedback_likert_scale' in response.content)
+            self.assertFalse("feedback_likert_scale" in response.content)
 
     def test_feedback(self):
         """
@@ -99,31 +98,49 @@ class FeedbackTestCase(PatchRandomMixin):
         """
         self.select_student(0)
         # We confirm we don't have errors rendering the student view
-        self.check_response('feedback_0', True)
+        self.check_response("feedback_0", True)
         # At 45, feedback_1 should render
         self.set_random(45)
-        self.check_response('feedback_1', True)
-        vote_str = 'Thank you for voting!'
-        feedback_str = 'Thank you for your feedback!'
-        self.submit_feedback('feedback_0',
-                             {'freeform': 'Worked well', 'vote': 3},
-                             {'freeform': 'Worked well', 'vote': 3,
-                              'response': feedback_str, 'success': True})
-        self.submit_feedback('feedback_0',
-                             {'vote': 4},
-                             {'freeform': 'Worked well', 'vote': 4,
-                              'response': vote_str, 'success': True})
-        self.submit_feedback('feedback_0',
-                             {'freeform': 'Worked great'},
-                             {'freeform': 'Worked great', 'vote': 4,
-                              'response': feedback_str, 'success': True})
+        self.check_response("feedback_1", True)
+        vote_str = "Thank you for voting!"
+        feedback_str = "Thank you for your feedback!"
+        self.submit_feedback(
+            "feedback_0",
+            {"freeform": "Worked well", "vote": 3},
+            {
+                "freeform": "Worked well",
+                "vote": 3,
+                "response": feedback_str,
+                "success": True,
+            },
+        )
+        self.submit_feedback(
+            "feedback_0",
+            {"vote": 4},
+            {
+                "freeform": "Worked well",
+                "vote": 4,
+                "response": vote_str,
+                "success": True,
+            },
+        )
+        self.submit_feedback(
+            "feedback_0",
+            {"freeform": "Worked great"},
+            {
+                "freeform": "Worked great",
+                "vote": 4,
+                "response": feedback_str,
+                "success": True,
+            },
+        )
         # And confirm we render correctly
-        self.check_response('feedback_0', True)
+        self.check_response("feedback_0", True)
         # Feedback 1 should render again; this should be stored in a
         # field
         self.set_random(55)
-        self.check_response('feedback_1', True)
+        self.check_response("feedback_1", True)
 
         # But it should not render for a new student
         self.select_student(1)
-        self.check_response('feedback_1', False)
+        self.check_response("feedback_1", False)

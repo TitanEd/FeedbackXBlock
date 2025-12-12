@@ -6,47 +6,49 @@ from mock import Mock
 
 
 def test_template_content(feedback_xblock):
-    """ Test content of FeedbackXBlock's student view """
-    student_fragment = feedback_xblock.render('student_view', Mock())
-    assert 'feedback' in student_fragment.content
+    """Test content of FeedbackXBlock's student view"""
+    student_fragment = feedback_xblock.render("student_view", Mock())
+    assert "feedback" in student_fragment.content
 
 
 def test_studio_view(feedback_xblock):
-    """ Test content of FeedbackXBlock's author view """
-    student_fragment = feedback_xblock.render('studio_view', Mock())
-    assert 'feedback' in student_fragment.content
+    """Test content of FeedbackXBlock's author view"""
+    student_fragment = feedback_xblock.render("studio_view", Mock())
+    assert "feedback" in student_fragment.content
 
 
 def test_studio_submit(feedback_xblock):
-    """ Test the FeedbackXBlock's save action """
+    """Test the FeedbackXBlock's save action"""
     request_body = b"""{
         "display_name": "foo",
         "voting_message": "bar",
         "feedback_message": "baz",
         "show_aggregate_to_students": true
     }"""
-    request = Mock(method='POST', body=request_body)
+    request = Mock(method="POST", body=request_body)
     response = feedback_xblock.studio_submit(request)
 
-    assert feedback_xblock.display_name == 'foo'
-    assert feedback_xblock.voting_message == 'bar'
-    assert feedback_xblock.feedback_message == 'baz'
+    assert feedback_xblock.display_name == "foo"
+    assert feedback_xblock.voting_message == "bar"
+    assert feedback_xblock.feedback_message == "baz"
     assert feedback_xblock.show_aggregate_to_students is True
-    assert response.status_code == 200 and {'result': 'success'} == response.json, response.json
+    assert (
+        response.status_code == 200 and {"result": "success"} == response.json
+    ), response.json
 
 
 def test_vote(feedback_xblock):
-    """ Test content of FeedbackXBlock's vote() method """
-    feedback_xblock.vote({'vote': 1})
+    """Test content of FeedbackXBlock's vote() method"""
+    feedback_xblock.vote({"vote": 1})
 
 
 def test_feedback_method(feedback_xblock):
-    """ Test content of FeedbackXBlock's feedback() method """
+    """Test content of FeedbackXBlock's feedback() method"""
     request_body = b"""{
         "freeform": "yes",
         "vote": 1
     }"""
-    request = Mock(method='POST', body=request_body)
+    request = Mock(method="POST", body=request_body)
     response = feedback_xblock.feedback(request)
 
     expected_response_json = {
@@ -57,4 +59,6 @@ def test_feedback_method(feedback_xblock):
         "vote": 1,
     }
 
-    assert response.status_code == 200 and response.json == expected_response_json, response.json
+    assert (
+        response.status_code == 200 and response.json == expected_response_json
+    ), response.json

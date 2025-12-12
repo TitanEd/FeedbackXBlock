@@ -3,7 +3,7 @@
 import os
 from setuptools import setup, find_packages
 
-README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+README = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
 
 
 def package_data(pkg, roots):
@@ -23,11 +23,11 @@ def package_data(pkg, roots):
 
 
 setup(
-    name='feedback-xblock',
-    version='2.1.0',
-    description='XBlock for providing feedback on course content',
+    name="feedback-xblock",
+    version="2.1.0",
+    description="XBlock for providing feedback on course content",
     long_description=README,
-    long_description_content_type='text/x-rst',
+    long_description_content_type="text/x-rst",
     packages=find_packages(
         include=[
             "feedback",
@@ -38,18 +38,20 @@ setup(
     ),
     include_package_data=True,
     install_requires=[
-        'XBlock',
+        "XBlock",
     ],
     entry_points={
-        'xblock.v1': [
-            'feedback = feedback.feedback:FeedbackXBlock',
+        "xblock.v1": [
+            "feedback = feedback.feedback:FeedbackXBlock",
         ],
-        'xblock.test.v0': [
-            'feedbacktest = feedbacktests:TestFeedback',
+        "xblock.test.v0": [
+            "feedbacktest = feedbacktests:TestFeedback",
         ],
-         "lms.djangoapp": [
+        "lms.djangoapp": [
             "feedback = feedback.apps:FeedbackConfig",
         ],
     },
-    package_data=package_data("feedback", ["static", "public", "templates", "translations"]),
+    package_data=package_data(
+        "feedback", ["static", "public", "templates", "translations"]
+    ),
 )
