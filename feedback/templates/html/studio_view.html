@@ -57,19 +57,6 @@
 
     <li class="field comp-setting-entry is-set">
       <div class="wrapper-comp-setting">
-        <label class="label setting-label" for="icon_set" aria-describedby="icon_set_option">{% trans "Likert icon set" %}</label>
-        <select name="icon_set" id="icon_set">
-          <option value="face">{% trans "Faces (happy to sad)" %}</option>
-          <option value="midface">{% trans "Faces (sad to happy)" %}</option>
-          <option value="num">{% trans "Numeric" %}</option>
-          <option value="star">{% trans "Stars" %}</option>
-        </select>
-      </div>
-      <span id="icon_set_option" class="tip setting-help">{% trans "We can either show happy/sad faces, numbers 1-5 or stars." %}</span>
-    </li>
-
-    <li class="field comp-setting-entry is-set">
-      <div class="wrapper-comp-setting">
         <label class="label setting-label" for="likert" aria-describedby="lik_example">{% trans "Likert prompt" %}</label>
         <input class="input setting-input" name="likert" id="likert" value="{% trans likert %}" type="text" />
       </div>

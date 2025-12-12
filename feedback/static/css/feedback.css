@@ -231,6 +231,7 @@
 .feedback_block .feedback_submit_feedback:visited {
     color: white;
     outline: none;
+    box-shadow: none;
 }
 
 /* Radio button accessibility */
